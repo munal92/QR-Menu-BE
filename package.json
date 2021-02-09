@@ -1,0 +1,32 @@
+{
+  "name": "qr-menu-be",
+  "version": "1.0.0",
+  "description": "Backend for QR Menu Website",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munal92/QR-Menu-BE.git"
+  },
+  "author": "M Fatih Unal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/munal92/QR-Menu-BE/issues"
+  },
+  "homepage": "https://github.com/munal92/QR-Menu-BE#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.15",
+    "multer": "^1.4.2"
+  }
+}
