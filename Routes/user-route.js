@@ -2,6 +2,7 @@ const { Storage } = require("@google-cloud/storage");
 const express = require("express");
 const router = express.Router();
 const UserDB = require("../models/userModel-db");
+const checkJWT = require("../auth/restricted-midd.js");
 const Multer = require("multer");
 
 /// Config Multer
@@ -25,7 +26,7 @@ const gc = new Storage({
 const qrMenuBucket = gc.bucket(process.env.GC_BUCKET_NAME);
 
 /// @GETREQ  get user info by id
-router.get("/:id", (req, res) => {
+router.get("/:id", checkJWT, (req, res) => {
   const { id } = req.params;
   try {
     UserDB.findById(id, (err, user_data) => {
@@ -40,27 +41,25 @@ router.get("/:id", (req, res) => {
   }
 });
 
-// @POSTREQ Create a new user
-
-router.post("/signup", (req, res) => {
-  const new_user = new UserDB({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  });
-
-  new_user
-    .save()
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      res.status(500).json({ errorMessage: "server Error", err });
+/// @POSTREQ  find login info
+router.post("/find", checkJWT, (req, res) => {
+  const userInfo = req.body;
+  console.log(userInfo);
+  try {
+    UserDB.findOne({ email: userInfo.email }, (err, user_data) => {
+      if (err) {
+        console.error(err);
+      } else {
+        res.status(200).json(user_data);
+      }
     });
+  } catch (err) {
+    res.status(500).json({ errorMessage: "server Error", err });
+  }
 });
 
 //@PutREQ add files to user
-router.put("/addinfo/:id", multer.single("upload"), (req, res) => {
+router.put("/addinfo/:id", checkJWT, multer.single("upload"), (req, res) => {
   const { id } = req.params;
   const filename1 =
     new Date().toISOString().replace(/:/g, "-") + req.file.originalname;
@@ -100,7 +99,7 @@ router.put("/addinfo/:id", multer.single("upload"), (req, res) => {
 });
 
 //@DeleteREQ delete files of the user
-router.put("/delfile/:id", (req, res) => {
+router.put("/delfile/:id", checkJWT, (req, res) => {
   const { id } = req.params;
   const updatedInfo = {
     fileLink: "NONE",

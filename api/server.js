@@ -4,12 +4,14 @@ const cors = require("cors");
 const server = express();
 ///  ROUTES
 const UserRoute = require("../Routes/user-route.js");
+const AuthRoute = require("../auth/auth-route.js");
 ///
 
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
 server.use("/api/user", UserRoute);
+server.use("/api/auth", AuthRoute);
 
 server.get("/", (req, res) => {
   res.send("<h1>&emsp;&emsp;&emsp;&emsp;API IS UP 🤖<h1></h1>");

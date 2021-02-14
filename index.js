@@ -10,6 +10,9 @@ mongoose.connect(
   () => console.log("Connected to MongoDB")
 );
 
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
 server.listen(PORT, () => {
   console.log(`///--> SERVER RUNNING ON ${PORT}`);
 });
