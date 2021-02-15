@@ -10,7 +10,16 @@ const multer = Multer({
   storage: Multer.memoryStorage(),
   //   limits: 10000,
   limits: {
-    fileSize: 10 * 1024 * 1024, // no larger than 10mb
+    fileSize: 5 * 1024 * 1024, // no larger than 5mb
+  },
+  fileFilter: (req, file, cb) => {
+    console.log(file.mimetype);
+    if (file.mimetype == "application/pdf") {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .pdf format allowed!"));
+    }
   },
 });
 
@@ -76,6 +85,7 @@ router.put("/addinfo/:id", checkJWT, multer.single("upload"), (req, res) => {
 
     const updatedInfo = {
       fileLink: publicURL,
+      fileName: req.body.fileName,
     };
     try {
       //// update DB
@@ -103,7 +113,9 @@ router.put("/delfile/:id", checkJWT, (req, res) => {
   const { id } = req.params;
   const updatedInfo = {
     fileLink: "NONE",
+    fileName: "NONE",
   };
+  //console.log("INFO", req.body);
   /// updating user info
   try {
     UserDB.findByIdAndUpdate(

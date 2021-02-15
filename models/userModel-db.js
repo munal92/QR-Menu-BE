@@ -20,7 +20,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: "NONE",
   },
-
+  fileName: {
+    type: String,
+    default: "NONE",
+  },
   date: {
     type: Date,
     default: Date.now,

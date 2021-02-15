@@ -38,12 +38,15 @@ router.post("/signup", (req, res) => {
 
 router.post("/signin", (req, res) => {
   const userInfo = req.body;
+
   if (isValid(userInfo)) {
     try {
       UserDB.findOne({ email: userInfo.email }, (err, user_data) => {
-        if (err) {
+        if (err || user_data === null) {
           console.error(err);
+          res.status(401).json({ message: "Invalid credentials" });
         } else {
+          // console.log(err, userInfo, user_data);
           if (
             (userInfo &&
               bcryptjs.compareSync(userInfo.password, user_data.password)) ||
