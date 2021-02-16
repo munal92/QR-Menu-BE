@@ -21,7 +21,17 @@ router.post("/signup", (req, res) => {
     });
     new_user
       .save()
-      .then((data) => {
+      .then((infos) => {
+        const token = generateToken(infos);
+        const data = {
+          name: infos.name,
+          email: infos.email,
+          token: token,
+        };
+        // console.log("data", data);
+
+        // console.log("token", data);
+        // res.status(200).json(data);
         res.status(200).json(data);
       })
       .catch((err) => {
@@ -52,7 +62,7 @@ router.post("/signin", (req, res) => {
               bcryptjs.compareSync(userInfo.password, user_data.password)) ||
             userInfo.password === user_data.password
           ) {
-            //console.log("u",u , "\nuserInfo", userInfo)
+            console.log("u", user_data);
             const token = generateToken(user_data);
             res.status(200).json({ message: "Login Successful", token });
           } else {
